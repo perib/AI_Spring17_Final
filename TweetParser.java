@@ -3,7 +3,7 @@ import java.io.*;
 import java.lang.*;
 import java.util.Scanner;
 
-public class Parser{
+public class TweetParser{
 
 //Unigram counts - Key: Word, value: Counts of word occurances
 	static HashMap<String, Integer> unigramCounts = new HashMap<String, Integer>();
@@ -35,7 +35,6 @@ public class Parser{
 			int uniCount = unigramCounts.get(token0);
 			double biC = (double) biCount;
 			double uniC = (double) uniCount;
-			System.out.println("Bi: " + biC + "UNI" + uniC);
 			return (biC / uniC);
 		}
 	}
@@ -92,6 +91,8 @@ public class Parser{
 			bigramProbs.put(phrase, prob);
 			token0 = token1;
 		}
+
+		/*
 		//Test
 		//UniCounts:
 		System.out.println("UNIGRAM COUNTS");
@@ -114,4 +115,6 @@ public class Parser{
 			String phrase2 = (String) keys3.next();
 			System.out.println(phrase2 + ": " + bigramProbs.get(phrase2));
 		}
+		*/
 	}
+}
