@@ -5,9 +5,7 @@ import java.util.Scanner;
  */
 public class GradingInterface {
 
-    /**
-     * @param args the command line arguments
-     */
+   
     public static void main(String[] args) {
        
         System.out.print("Give me a hashtag: ");
