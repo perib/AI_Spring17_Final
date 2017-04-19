@@ -1,8 +1,5 @@
 import java.util.Scanner;
-/**
- *
- * @author abbysandrews
- */
+
 public class GradingInterface {
 
    
