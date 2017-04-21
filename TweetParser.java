@@ -41,25 +41,52 @@ public class TweetParser{
 
 	static public void main(String[] args) throws FileNotFoundException{
 
+		//Take in tweet and add start (<s>) and end (<e>) tags
 		Scanner parser = new Scanner(new File(args[0]));
-		ArrayList<String> tweetListed = new ArrayList<String>();
+		ArrayList<String> tweetListed = new ArrayList<String>(); //List of words from tweet
+		boolean end = false;
+		tweetListed.add("<s>"); //Add start tag
+
+		//Make list of abbrev
+		String[] abbv = {"Mr.", "Mrs.", "Ms.", "Dr.", "Ph.D.", "Drs.", "Cmdr.", "Rev.", "Jr.", "Sr.", "Inc.", "St.", "Rd.", "Ave.", "Ct.", "Ft.", "In.", "in.", "Co.", "a.m.", "p.m.", "e.g.", "i.e.", "etc.", "Jan.", "Feb.", "Mar.", "Apr.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."};
+
 		while (parser.hasNext()){
-			//System.out.println(parser.next());
-			tweetListed.add(parser.next());
+			String cur = parser.next();
+			//Check if end of sentence
+			if (cur.endsWith(".")||cur.endsWith("?")||cur.endsWith("!")){
+				for (String abbrev : abbv){
+					if (cur.equals(abbrev)){
+						break;
+					}
+				}
+				end = true;
+			}
+
+			//Add word to list
+			tweetListed.add(cur);
+
+			//Add tags if needed
+			if (end==true){
+				tweetListed.add("<e>");
+				if (parser.hasNext()){
+					tweetListed.add("<s>");
+				}
+			}
+			end=false;
 		}
 
-	//Variables!
+		//Variables!
 		String prevToken = "";
 
 		for (String token : tweetListed) {
-		//Unigram counts:
+			//Unigram counts:
 			if (unigramCounts.get(token)==null){
 				unigramCounts.put(token, 1);
 			} else {
 				unigramCounts.put(token, unigramCounts.get(token)+1);
 			}
 
-		//Bigram counts
+			//Bigram counts
 			String phrase;
 			if (prevToken == "") {
 				phrase = token;
@@ -92,7 +119,7 @@ public class TweetParser{
 			token0 = token1;
 		}
 
-		/*
+		
 		//Test
 		//UniCounts:
 		System.out.println("UNIGRAM COUNTS");
@@ -115,6 +142,6 @@ public class TweetParser{
 			String phrase2 = (String) keys3.next();
 			System.out.println(phrase2 + ": " + bigramProbs.get(phrase2));
 		}
-		*/
+		
 	}
 }
