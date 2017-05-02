@@ -1,9 +1,12 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -86,6 +89,7 @@ public class TweetReader {
 			TweetParser m = new TweetParser(unigramCounts,unigramProbs,bigramCounts,bigramProbs,tokenCount,tweetCount);
 			brain.put(mood, m);
 			ArrayList<String> memoryforMood = new ArrayList<String>(10);
+			memory.put(mood, memoryforMood);
 		}
 		
 		//run the interface:
@@ -96,6 +100,7 @@ public class TweetReader {
 			String mood = s.next();
 			
 			if(mood.equals("done")){// close the system
+				done = true;
 				break;
 			}else if(moods.contains(mood)){
 				//do the things
@@ -125,19 +130,65 @@ public class TweetReader {
 				
 			}else{ //if not done or one of the moods, we can't do anything. Reloop.
 				System.out.println("That wasn't one of the supported moods");
-				
-				
+							
+			}
+		}
+
+		//printout mood hashmaps:
+		for(String mood:moods){
+			printHashmap(brain.get(mood).unigramCounts, mood.concat("unigramcounts.txt"));
+			printHashmap(brain.get(mood).unigramProbs, mood.concat("unigramprobs.txt"));
+			printHashmap(brain.get(mood).bigramCounts, mood.concat("bigramcounts.txt"));
+			printHashmap(brain.get(mood).bigramProbs, mood.concat("bigramprobs.txt"));
+			try{
+			    PrintWriter writer = new PrintWriter(mood.concat("stores_counts.txt"), "UTF-8");
+			    writer.println(brain.get(mood).tokenCount);
+			    writer.println(brain.get(mood).tweetCount);
+			    writer.close();
+			} catch (IOException e) {
+			   // do something
 			}
 			
 			
-			
 		}
-
-		
-		
 		
 		
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @return returns what is learned from the different moods
+	 */
+	public HashMap<String,TweetParser> readinMoods(){
+		HashMap<String,TweetParser> brain = new HashMap<String,TweetParser>();
+		ArrayList<String> moods = new ArrayList<String>(Arrays.asList("happy", "sad", "troll", "angry"));
+		for(String mood:moods){
+			HashMap<String, Integer> unigramCounts = readFile(mood.concat("unigramcounts.txt"));
+			HashMap<String, Double> unigramProbs = readFile(mood.concat("unigramprobs.txt"));
+			HashMap<String, HashMap<String, Integer>> bigramCounts = readFile(mood.concat("bigramcounts.txt"));
+			HashMap<String, HashMap<String, Double>> bigramProbs = readFile(mood.concat("bigramprobs.txt"));
+			
+			//read in ints
+			Scanner fileIn = null;
+			try { 
+				File file = new File(mood.concat("stores_counts.txt"));
+				fileIn = new Scanner(new FileReader(file));		
+					
+			} catch (IOException e) {
+				
+				System.out.println(mood.concat("stores_counts.txt" +" not found"));
+				System.exit(1);
+			}
+			
+			int tokenCount = fileIn.nextInt();
+			int tweetCount = fileIn.nextInt();
+			TweetParser m = new TweetParser(unigramCounts,unigramProbs,bigramCounts,bigramProbs,tokenCount,tweetCount);
+			brain.put(mood, m);
+		}
+		return brain;
+	}
+	
 	
 	// prints hashmap to file
 	public static void printHashmap(HashMap printme, String filename){
