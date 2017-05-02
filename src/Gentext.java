@@ -7,20 +7,23 @@ import com.sun.crypto.provider.HmacPKCS12PBESHA1;
 
 import java.util.*;
 
+//TODO: Change unigram for start to next ~ p(next word | <s>)
+//TODO: replace null with "?", "!", "."
+//TODO: Skeleton
 public class Gentext {
 
 	public static void main(String args[]){
-		System.out.println();
-		HashMap<String,Double> hm1 = new HashMap<String,Double>();
-		
-		hm1.put("the", .5);
-		hm1.put("i", .5);
-
-		
 		
 		HashMap<String,HashMap<String,Double>> hm2 = new HashMap<String,HashMap<String,Double>>();
 		
 		HashMap<String,Double> temp = new HashMap<String,Double>();
+		temp.put("the", .5);
+		temp.put("i", .5);
+		
+		hm2.put("<s>", temp);
+		
+		
+		temp = new HashMap<String,Double>();
 		temp.put("apple", .3);
 		temp.put("tree", .3);
 		temp.put("potato", .3);
@@ -95,7 +98,10 @@ public class Gentext {
 		
 		//****************************************8
 		
-		System.out.print(gentext(hm1,hm2,140));
+		String generated = gentext(hm2,140);
+		
+		System.out.println(generated);
+		System.out.println(generated.length());
 		
 	}
 	
@@ -104,13 +110,17 @@ public class Gentext {
 	 * HM1 is a unigram (P(word))
 	 * HM2 is a bigram (P(next word|prev word)
 	 * */
-	public static String gentext(HashMap hm1, HashMap hm2,int maxChars){
+	public static String gentext(HashMap hm2,int maxChars){
 		StringBuilder sb = new StringBuilder();	
 		int count = 0;
 		while(maxChars> count){
 			
 			for(int i = 0; i<5;i++){
-				String next = genSentence(hm1,hm2,maxChars-count);
+				String next = genSentence(hm2,maxChars-count);
+				
+				if(next == ""){
+					return sb.toString();
+				}
 				
 				if(count + next.length() <= maxChars){
 					sb.append(next);
@@ -130,11 +140,11 @@ public class Gentext {
 		return sb.toString();
 	}
 	
-	public static String genSentence(HashMap hm1, HashMap hm2,int maxChars){
+	public static String genSentence(HashMap<String,HashMap<String,Double>> hm2,int maxChars){
 		StringBuilder sb = new StringBuilder();	
 		
 		int count = 0;
-		String prev = getFirstWord(hm1);
+		String prev = getFirstWord(hm2.get("<s>") );
 		count = prev.length() + 1;
 		
 		sb.append(prev);
@@ -148,7 +158,17 @@ public class Gentext {
 				if(next == null){
 					sb.setCharAt(sb.length()-1, '.');
 					return sb.toString();
+				}else if(next == "."){
+					sb.setCharAt(sb.length()-1, '.');
+					return sb.toString();
+				}else if(next == "!"){
+					sb.setCharAt(sb.length()-1, '!');
+					return sb.toString();
+				}else if(next == "?"){
+					sb.setCharAt(sb.length()-1, '?');
+					return sb.toString();
 				}
+				
 				
 				if(next.length() + count <= maxChars){
 					sb.append(next);
@@ -157,16 +177,18 @@ public class Gentext {
 					count = count + prev.length() + 1;
 					break;
 				}else if(i == 4){
-					return sb.toString();
+					return "";//sb.toString();
 				}
 				
 			}
 			
 		}
 		
+
 		return sb.toString();
 	}
 	
+	//Gets a single word from the probability distribution 
 	public static String getFirstWord(HashMap<String,Double> hm1){
 		String s = null;
 		
@@ -186,6 +208,7 @@ public class Gentext {
 		return s;
 	}
 	
+	//gets the next word
 	public static String getNextWord(HashMap<String,HashMap<String,Double>> hm2, String prevWord){
 		if(hm2.containsKey(prevWord)){
 			return getFirstWord(hm2.get(prevWord));

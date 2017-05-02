@@ -22,6 +22,18 @@ public class TweetParser{
 
 	//Total number of tweets in tweetListed
 	Integer tweetCount;
+	
+	
+	public TweetParser(HashMap<String, Integer> unigramCounts,HashMap<String, Double> unigramProbs,HashMap<String, HashMap<String, Integer>> bigramCounts,HashMap<String, HashMap<String, Double>> bigramProbs,Integer tokenCount,Integer tweetCount){
+		this.unigramCounts = unigramCounts;
+		this.unigramProbs = unigramProbs;
+		this.bigramCounts = bigramCounts;
+		this.bigramProbs = bigramProbs;
+		this.tokenCount=tokenCount;
+		this.tweetCount=tweetCount;	
+		
+	}
+	
 
 	/**
 	 * A constructor!? possibly
