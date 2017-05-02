@@ -24,8 +24,6 @@ public class GetTweet {
 	public GetTweet(String hashtag) {
 		ht = hashtag;
 		
-		System.out.println("Hello");
-		
 		// Opens configuration stream to twitter
 		// all of these codes are from an account I made, @RAPATweets
 		ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -55,9 +53,6 @@ public class GetTweet {
 //				// prints all tweets: for testing
 //				System.out.println("USER: " + user + " wrote: " + msg);
 //			}
-			
-			//writeFile();
-			
 		}
 
 	  catch (Throwable te) {
@@ -105,12 +100,12 @@ public class GetTweet {
 			tag = "#" + tag;
 		}
 		
-//		// read in 100 tweets with hashtag "tag"
-//		GetTweet current = new GetTweet(tag); 
-//		
-//		// put tweets in text file, 1 tweet per line
-//		current.writeFile();
-//		
+		// read in 100 tweets with hashtag "tag"
+		GetTweet current = new GetTweet(tag); 
+		
+		// put tweets in text file, 1 tweet per line
+		current.writeFile();
+		
 	}
 	
 }
