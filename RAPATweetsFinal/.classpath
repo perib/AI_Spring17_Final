@@ -2,5 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Pedro/Google Drive/Laptop/Google Drive/Oberlin/Spring2017/AI/final project/RAPATweetsFinal/twitter4j-core-4.0.4-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Pedro/Google Drive/Laptop/Google Drive/Oberlin/Spring2017/AI/final project/RAPATweetsFinal/twitter4j-core-4.0.4.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

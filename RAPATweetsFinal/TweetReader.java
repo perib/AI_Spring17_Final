@@ -23,82 +23,128 @@ import java.util.Scanner;
 public class TweetReader {
 	
 	public TweetReader(String tag) throws FileNotFoundException {
-		Scanner scan = new Scanner(System.in);
-		// get a hashtag & get tweets with that hashtag
-		if (!tag.substring(0, 1).equals("#")) {
-			tag = "#" + tag;
-		}
-		GetTweet tweetGetter = new GetTweet(tag);
-		System.out.println("???");
-		tweetGetter.writeFile();
+		Scanner s = new Scanner(System.in);
+		System.out.print("Read mood hashmaps from file, or refresh from a new set of tweets? (\'Refresh\' for new tweets)");
 		
-		// parse tweets, make hashmaps 
-		TweetParser parsedTweets = new TweetParser("savedtweets.txt");
-		System.out.println("Finished parser run");
-		
-		// generate tweets & learn!
-//		ArrayList<String> generatedTweets = new ArrayList<String>();
-//		for (int i = 0; i < 10; i++) {
-//			// generate tweet and get feedback
-//			String s = parsedTweets.gentext();
-//			System.out.println(s);
-////			System.out.println("Was this a good tweet? Y/N");
-////			String response = scan.nextLine();
-////			if (response.equals("Y")) {
-////				generatedTweets.add(s);
-////			}
-//		}
-//		
-//		String s = parsedTweets.gentext();
-//		System.out.println(s);
-//		
-//		//interfact judge it 
-//		
-//		for (int i = 0; i < generatedTweets.size(); i++) {
-//			parsedTweets.updateCountsString(s);
-//			parsedTweets.updateProbsString(s);
-//		}
-//		
-//		System.out.println("Updated TweetParser with feedback. New Tweet:");
-//		System.out.println(parsedTweets.gentext());
-		
-		// save hashmaps
-		printHashmap(parsedTweets.unigramCounts, "unigramcounts.txt");
-		printHashmap(parsedTweets.unigramProbs, "unigramprobs.txt");
-		printHashmap(parsedTweets.bigramCounts, "bigramcounts.txt");
-		printHashmap(parsedTweets.bigramProbs, "bigramprobs.txt");
-		
-		//Todo: Print these to file?
-		int tokenCount = parsedTweets.tokenCount;
-		int tweetCount = parsedTweets.tweetCount;
+		String mode = s.next();//make this equal to refresh to read from twitter
 		
 		
-		//create moods:
 		ArrayList<String> moods = new ArrayList<String>(Arrays.asList("happy", "sad", "troll", "angry"));
-		//Save the stuff for batch training
 		HashMap<String,ArrayList<String>> memory = new HashMap<String,ArrayList<String>>();
+		HashMap<String,TweetParser> brain;
 		
-		HashMap<String,TweetParser> brain = new HashMap<String,TweetParser>();
-		
-		for(String mood:moods){
-			HashMap<String, Integer> unigramCounts = readFile("unigramcounts.txt");
-			HashMap<String, Double> unigramProbs = readFile("unigramprobs.txt");
-			HashMap<String, HashMap<String, Integer>> bigramCounts = readFile("bigramcounts.txt");
-			HashMap<String, HashMap<String, Double>> bigramProbs = readFile("bigramprobs.txt");
+		if(mode.equals("Refresh")){
 			
-			TweetParser m = new TweetParser(unigramCounts,unigramProbs,bigramCounts,bigramProbs,tokenCount,tweetCount);
-			brain.put(mood, m);
-			ArrayList<String> memoryforMood = new ArrayList<String>(10);
-			memory.put(mood, memoryforMood);
+			System.out.println("reading from twitter...");
+		
+			Scanner scan = new Scanner(System.in);
+			// get a hashtag & get tweets with that hashtag
+			if (!tag.substring(0, 1).equals("#")) {
+				tag = "#" + tag;
+			}
+			GetTweet tweetGetter = new GetTweet(tag);
+			System.out.println("???");
+			tweetGetter.writeFile();
+			
+			// parse tweets, make hashmaps 
+			TweetParser parsedTweets = new TweetParser("savedtweets.txt");
+			System.out.println("Finished parser run");
+			
+			// generate tweets & learn!
+	//		ArrayList<String> generatedTweets = new ArrayList<String>();
+	//		for (int i = 0; i < 10; i++) {
+	//			// generate tweet and get feedback
+	//			String s = parsedTweets.gentext();
+	//			System.out.println(s);
+	////			System.out.println("Was this a good tweet? Y/N");
+	////			String response = scan.nextLine();
+	////			if (response.equals("Y")) {
+	////				generatedTweets.add(s);
+	////			}
+	//		}
+	//		
+	//		String s = parsedTweets.gentext();
+	//		System.out.println(s);
+	//		
+	//		//interfact judge it 
+	//		
+	//		for (int i = 0; i < generatedTweets.size(); i++) {
+	//			parsedTweets.updateCountsString(s);
+	//			parsedTweets.updateProbsString(s);
+	//		}
+	//		
+	//		System.out.println("Updated TweetParser with feedback. New Tweet:");
+	//		System.out.println(parsedTweets.gentext());
+			
+			// save hashmaps
+			printHashmap(parsedTweets.unigramCounts, "unigramcounts.txt");
+			printHashmap(parsedTweets.unigramProbs, "unigramprobs.txt");
+			printHashmap(parsedTweets.bigramCounts, "bigramcounts.txt");
+			printHashmap(parsedTweets.bigramProbs, "bigramprobs.txt");
+			
+			//Todo: Print these to file?
+			int tokenCount = parsedTweets.tokenCount;
+			int tweetCount = parsedTweets.tweetCount;
+		
+	
+		
+		
+		
+			//create moods:
+			//Save the stuff for batch training
+			
+			
+			brain = new HashMap<String,TweetParser>();
+			
+			
+			
+			for(String mood:moods){
+				HashMap<String, Integer> unigramCounts = readFile("unigramcounts.txt");
+				HashMap<String, Double> unigramProbs = readFile("unigramprobs.txt");
+				HashMap<String, HashMap<String, Integer>> bigramCounts = readFile("bigramcounts.txt");
+				HashMap<String, HashMap<String, Double>> bigramProbs = readFile("bigramprobs.txt");
+				
+				TweetParser m = new TweetParser(unigramCounts,unigramProbs,bigramCounts,bigramProbs,tokenCount,tweetCount);
+				brain.put(mood, m);
+				ArrayList<String> memoryforMood = new ArrayList<String>(10);
+				memory.put(mood, memoryforMood);
+			}
+		
+		}else{
+			brain = readinMoods();
+			for(String mood:moods){
+				ArrayList<String> memoryforMood = new ArrayList<String>(10);
+				memory.put(mood, memoryforMood);
+			}
+			
 		}
+		
 		
 		//run the interface:
+		Boolean batch = false;
+		String BatchMood = "happy";
 		Boolean done = false;
+		
+		int count = 0;
 		while(!done){
-			Scanner s = new Scanner(System.in);
-			System.out.print("Give me a mood (happy, sad, angry, troll): ");
-			String mood = s.next();
-			
+			String mood;
+			if(!batch){		
+				System.out.print("Give me a mood (happy, sad, angry, troll), \"batch\" for batches of 10, done to exit and save: ");
+				mood = s.next();
+				if(mood.equals("batch")){
+					batch = true;
+					System.out.print("Give me a mood (happy, sad, angry, troll): ");
+					BatchMood = s.next();		
+				}
+			}else{
+				count ++;
+				mood = BatchMood;
+				if(count > 10){
+					count = 0;
+					batch = false;
+				}
+			}
+	
 			if(mood.equals("done")){// close the system
 				done = true;
 				break;
@@ -137,6 +183,7 @@ public class TweetReader {
 		//printout mood hashmaps:
 		for(String mood:moods){
 			printHashmap(brain.get(mood).unigramCounts, mood.concat("unigramcounts.txt"));
+			//System.out.println(mood.concat("unigramcounts.txt"));
 			printHashmap(brain.get(mood).unigramProbs, mood.concat("unigramprobs.txt"));
 			printHashmap(brain.get(mood).bigramCounts, mood.concat("bigramcounts.txt"));
 			printHashmap(brain.get(mood).bigramProbs, mood.concat("bigramprobs.txt"));
