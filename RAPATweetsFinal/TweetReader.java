@@ -24,7 +24,7 @@ public class TweetReader {
 	
 	public TweetReader(String tag) throws FileNotFoundException {
 		Scanner s = new Scanner(System.in);
-		System.out.print("Read mood hashmaps from file, or refresh from a new set of tweets? (\'Refresh\' for new tweets)");
+		System.out.print("Read mood hashmaps from file, or refresh from a new set of tweets? (\'Refresh\' for new tweets) :");
 		
 		String mode = s.next();//make this equal to refresh to read from twitter
 		

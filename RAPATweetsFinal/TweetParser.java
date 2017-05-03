@@ -371,6 +371,11 @@ public class TweetParser{
 	 * */
 	public String gentext(){
 		int maxChars = 140;
+		Random r = new Random();
+		double rand = r.nextGaussian()*70+85;
+		if(rand >=140 ) maxChars = 140;
+		else if(rand <= 40) maxChars = 40;
+		else maxChars = (int) Math.round(rand);
 		HashMap<String, HashMap<String, Double>> hm2 = bigramProbs;
 		StringBuilder sb = new StringBuilder();	
 		int count = 0;
