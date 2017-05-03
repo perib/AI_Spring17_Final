@@ -135,6 +135,7 @@ public class TweetReader {
 					batch = true;
 					System.out.print("Give me a mood (happy, sad, angry, troll): ");
 					BatchMood = s.next();		
+					continue;
 				}
 			}else{
 				count ++;

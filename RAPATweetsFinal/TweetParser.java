@@ -409,7 +409,12 @@ public class TweetParser{
 		StringBuilder sb = new StringBuilder();	
 
 		int count = 0;
-		String prev = getFirstWord(hm2.get("<s>") );
+		boolean done = false;
+		String prev = "";
+		while(!done){
+			prev = getFirstWord(hm2.get("<s>") );
+			if(!prev.equals("<s>")|| !prev.substring(0, 4).equals("http")) done = true;
+		}
 		count = prev.length() + 1;
 
 		sb.append(prev);
