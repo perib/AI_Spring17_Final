@@ -111,7 +111,7 @@ public class TweetReader {
 			}
 		
 		}else{
-			brain = readinMoods();
+			brain = readinMoods(tag);
 			for(String mood:moods){
 				ArrayList<String> memoryforMood = new ArrayList<String>(10);
 				memory.put(mood, memoryforMood);
@@ -183,11 +183,11 @@ public class TweetReader {
 
 		//printout mood hashmaps:
 		for(String mood:moods){
-			printHashmap(brain.get(mood).unigramCounts, mood.concat("unigramcounts.txt"));
+			printHashmap(brain.get(mood).unigramCounts, tag.concat(mood.concat("unigramcounts.txt")));
 			//System.out.println(mood.concat("unigramcounts.txt"));
-			printHashmap(brain.get(mood).unigramProbs, mood.concat("unigramprobs.txt"));
-			printHashmap(brain.get(mood).bigramCounts, mood.concat("bigramcounts.txt"));
-			printHashmap(brain.get(mood).bigramProbs, mood.concat("bigramprobs.txt"));
+			printHashmap(brain.get(mood).unigramProbs, tag.concat(mood.concat("unigramprobs.txt")));
+			printHashmap(brain.get(mood).bigramCounts, tag.concat(mood.concat("bigramcounts.txt")));
+			printHashmap(brain.get(mood).bigramProbs, tag.concat(mood.concat("bigramprobs.txt")));
 			try{
 			    PrintWriter writer = new PrintWriter(mood.concat("stores_counts.txt"), "UTF-8");
 			    writer.println(brain.get(mood).tokenCount);
@@ -208,14 +208,14 @@ public class TweetReader {
 	 * 
 	 * @return returns what is learned from the different moods
 	 */
-	public HashMap<String,TweetParser> readinMoods(){
+	public HashMap<String,TweetParser> readinMoods(String tag){
 		HashMap<String,TweetParser> brain = new HashMap<String,TweetParser>();
 		ArrayList<String> moods = new ArrayList<String>(Arrays.asList("happy", "sad", "troll", "angry"));
 		for(String mood:moods){
-			HashMap<String, Integer> unigramCounts = readFile(mood.concat("unigramcounts.txt"));
-			HashMap<String, Double> unigramProbs = readFile(mood.concat("unigramprobs.txt"));
-			HashMap<String, HashMap<String, Integer>> bigramCounts = readFile(mood.concat("bigramcounts.txt"));
-			HashMap<String, HashMap<String, Double>> bigramProbs = readFile(mood.concat("bigramprobs.txt"));
+			HashMap<String, Integer> unigramCounts = readFile(tag.concat(mood.concat("unigramcounts.txt")));
+			HashMap<String, Double> unigramProbs = readFile(tag.concat(mood.concat("unigramprobs.txt")));
+			HashMap<String, HashMap<String, Integer>> bigramCounts = readFile(tag.concat(mood.concat("bigramcounts.txt")));
+			HashMap<String, HashMap<String, Double>> bigramProbs = readFile(tag.concat(mood.concat("bigramprobs.txt")));
 			
 			//read in ints
 			Scanner fileIn = null;
