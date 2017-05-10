@@ -134,7 +134,11 @@ public class TweetReader {
 				if(mood.equals("batch")){
 					batch = true;
 					System.out.print("Give me a mood (happy, sad, angry, troll): ");
-					BatchMood = s.next();		
+					BatchMood = s.next();
+					if(!moods.contains(BatchMood)){
+						System.out.println("That was not a supported mood!");
+						batch = false;
+					}
 					continue;
 				}
 			}else{

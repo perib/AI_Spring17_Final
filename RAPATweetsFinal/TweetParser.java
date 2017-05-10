@@ -374,7 +374,7 @@ public class TweetParser{
 		Random r = new Random();
 		double rand = r.nextGaussian()*70+85;
 		if(rand >=140 ) maxChars = 140;
-		else if(rand <= 40) maxChars = 40;
+		else if(rand <= 60) maxChars = 60;
 		else maxChars = (int) Math.round(rand);
 		HashMap<String, HashMap<String, Double>> hm2 = bigramProbs;
 		StringBuilder sb = new StringBuilder();	
@@ -383,7 +383,7 @@ public class TweetParser{
 
 			for(int i = 0; i<5;i++){
 				String next = genSentence(hm2,maxChars-count);
-				if(next == ""){
+				if(next.equals("") && sb.length()>0){
 					return sb.toString();
 				}
 
@@ -393,6 +393,40 @@ public class TweetParser{
 					break;
 				}else{
 					if(i == 4){
+						if(sb.length()==0) return gentextEmergency140();
+						return sb.toString();
+					}
+				}
+
+
+			}
+
+		}
+		if(sb.length()==0) return gentextEmergency140();
+		return sb.toString();
+	}
+	
+	//returns a sentence with 140 characters, it should always be able to do this. in case 
+	//we can't make a sentence that is shorter.
+	public String gentextEmergency140(){
+		int maxChars = 140;
+		HashMap<String, HashMap<String, Double>> hm2 = bigramProbs;
+		StringBuilder sb = new StringBuilder();	
+		int count = 0;
+		while(maxChars> count){
+
+			for(int i = 0; i<100;i++){
+				String next = genSentence(hm2,maxChars-count);
+				if(next.equals("") && sb.length()>0){
+					return sb.toString();
+				}
+
+				if(count + next.length() <= maxChars){
+					sb.append(next);
+					count = count+ next.length();
+					break;
+				}else{
+					if(i == 100){
 						return sb.toString();
 					}
 				}
@@ -404,6 +438,7 @@ public class TweetParser{
 
 		return sb.toString();
 	}
+	
 
 	public String genSentence(HashMap<String,HashMap<String,Double>> hm2,int maxChars){
 		StringBuilder sb = new StringBuilder();	
@@ -413,7 +448,7 @@ public class TweetParser{
 		String prev = "";
 		while(!done){
 			prev = getFirstWord(hm2.get("<s>") );
-			if(!prev.equals("<s>")|| !prev.substring(0, 4).equals("http")) done = true;
+			if(!prev.equals("<s>")) done = true;
 		}
 		count = prev.length() + 1;
 
@@ -449,7 +484,7 @@ public class TweetParser{
 					count = count + prev.length() + 1;
 					break;
 				}else if(i == 4){
-					return sb.toString();//sb.toString();
+					return "";//sb.toString();
 				}
 
 			}
@@ -457,7 +492,7 @@ public class TweetParser{
 		}
 
 
-		return sb.toString();
+		return "";//sb.toString();
 	}
 
 	//Gets a single word from the probability distribution 
