@@ -24,7 +24,7 @@ GetTweet.class: GetTweet.java
 	$(JCC) $(JFLAGS) -classpath twitter4j-core-4.0.4.jar GetTweet.java
 
 TweetReader.class: TweetReader.java
-	$(JCC) $(JFLAGS) -classpath twitter4j-core-4.0.4.jar -Xlint TweetReader.java
+	$(JCC) $(JFLAGS) -classpath twitter4j-core-4.0.4.jar:\. TweetReader.java
 
 
 	
