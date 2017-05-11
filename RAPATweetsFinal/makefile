@@ -11,7 +11,6 @@ JFLAGS = -g
 # typing 'make' will invoke the first target entry in the makefile 
 # (the default one in this case)
 #
-CLASSPATH = .:twitter4j-core-4.0.4.jar
 default: GetTweet.class TweetParser.class TweetReader.class
 
 # this target entry builds the Average class
@@ -19,13 +18,13 @@ default: GetTweet.class TweetParser.class TweetReader.class
 # and the rule associated with this entry gives the command to create it
 #
 TweetParser.class: TweetParser.java
-	$(JCC) -classpath $(CLASSPATH) $(JFLAGS) $(-Xlint) TweetParser.java
+	$(JCC) $(JFLAGS) -classpath twitter4j-core-4.0.4.jar TweetParser.java
 
 GetTweet.class: GetTweet.java
-	$(JCC) $(JFLAGS) GetTweet.java
+	$(JCC) $(JFLAGS) -classpath twitter4j-core-4.0.4.jar GetTweet.java
 
 TweetReader.class: TweetReader.java
-	$(JCC) $(JFLAGS) TweetReader.java
+	$(JCC) $(JFLAGS) -classpath twitter4j-core-4.0.4.jar -Xlint TweetReader.java
 
 
 	
